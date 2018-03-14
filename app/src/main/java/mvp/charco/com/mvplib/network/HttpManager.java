@@ -7,6 +7,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.BitmapCallback;
+import com.lzy.okgo.callback.Callback;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.https.HttpsUtils;
@@ -90,7 +91,7 @@ public class HttpManager {
     /**
      * 请求字符串
      */
-    public HttpManager requsetStringGet(String url,StringCallback stringCallback, Map<String, String> params) {
+    public HttpManager requsetStringGet(String url,Map<String, String> params,StringCallback stringCallback) {
         OkGo.<String>get(checkUrl(url))
                 .tag(url)
                 .params(params)
@@ -101,7 +102,7 @@ public class HttpManager {
     /**
      * 请求json对象
      */
-    public <T> HttpManager requsetJsonGet(String url,JsonCallback<T> jsonCallback, Map<String, String> params) {
+    public <T> HttpManager requsetJsonGet(String url, Map<String, String> params,JsonCallback<T> jsonCallback) {
         OkGo.<T>get(checkUrl(url))
                 .tag(url)
                 .params(params)
@@ -169,12 +170,13 @@ public class HttpManager {
     /**
      * 上传文件
      */
-    public <T>HttpManager upFile(String url, File file, DialogCallback<T> dialogCallback, Map<String, String> params){
+    public <T>HttpManager upFile(String url, String fileParams,File file,
+                                 Map<String, String> params,Callback<T> callback){
         OkGo.<T>post(checkUrl(url))
                 .tag(this)
                 .params(params)
-                .upFile(file)
-                .execute(dialogCallback);
+                .params(fileParams,file)
+                .execute(callback);
         return getInstance();
     }
 
@@ -185,7 +187,7 @@ public class HttpManager {
      numberFormat.setMinimumFractionDigits(2);
      numberFormat.format(progress.fraction)
      */
-    public HttpManager downFile(String url, FileCallback fileCallback ,  Map<String, String> params){
+    public HttpManager downFile(String url,Map<String, String> params, FileCallback fileCallback ){
         OkGo.<File>get(checkUrl(url))//
                 .tag(this)//
                 .params(params)
